@@ -3,6 +3,7 @@ package com.keeper.googlekeep.dominios;
 import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "usuarios")
@@ -60,4 +61,22 @@ public class Usuario {
         this.apellido = apellido;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(id, usuario.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                '}';
+    }
 }

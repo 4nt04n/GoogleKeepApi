@@ -2,6 +2,7 @@ package com.keeper.googlekeep;
 
 import com.keeper.googlekeep.dominios.Usuario;
 import com.keeper.googlekeep.repositorios.UsuarioRepositorio;
+import com.keeper.googlekeep.servicios.ServUsuario;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +15,17 @@ import org.springframework.test.annotation.Rollback;
 @Rollback(false)
 public class UsuarioRepositorioTest {
     @Autowired
-    private UsuarioRepositorio repo;
+    public ServUsuario service;
 
     @Test
     public void testNuevoUsuario(){
         Usuario usuario = new Usuario();
-        usuario.setEmail("Sanchez@gmail.com");
+        usuario.setEmail("San@gmail.com");
         usuario.setApellido("Sanchez");
         usuario.setNombre("Antonio");
         usuario.setPassword("hola123");
-
-        Usuario usuarioGuardado = repo.save(usuario);
+        service.crearUsuario(usuario);
+        Usuario usuarioGuardado = service.traerUnicoXEmail(usuario.getEmail());
         Assertions.assertThat(usuarioGuardado).isNotNull();
         Assertions.assertThat(usuarioGuardado.getId()).isGreaterThan(0);
     }
@@ -32,7 +33,7 @@ public class UsuarioRepositorioTest {
     public void testUsuarioXEmail(){
         String email="Sanchez@gmail.com";
         Usuario usuario =new Usuario();
-        usuario = repo.findByEmail(email);
+        usuario = service.traerUnicoXEmail(email);
 
         Assertions.assertThat(usuario.getEmail()).isEqualTo(email);
     }

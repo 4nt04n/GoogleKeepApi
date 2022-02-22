@@ -1,11 +1,13 @@
 package com.keeper.googlekeep.dominios;
 
 import javax.persistence.*;
+import javax.xml.crypto.Data;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "notas")
-public class Nota {
+public class Nota implements  Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,6 +16,7 @@ public class Nota {
     private String titulo;
     private String descripcion;
     private Date fecha;
+    private String tags;
 
     public Long getId() {
         return id;
@@ -55,6 +58,22 @@ public class Nota {
         this.fecha = fecha;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Nota nota = (Nota) o;
+        return Objects.equals(id, nota.id);
+    }
+
     @Override
     public String toString() {
         return "Nota{" +
@@ -64,5 +83,9 @@ public class Nota {
                 ", descripcion='" + descripcion + '\'' +
                 ", fecha=" + fecha +
                 '}';
+    }
+    @Override
+    protected Nota clone() throws CloneNotSupportedException {
+        return (Nota)super.clone();
     }
 }

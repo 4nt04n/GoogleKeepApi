@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.temporal.Temporal;
+import java.util.*;
 
 @RestController
 public class NotaController {
@@ -21,6 +20,39 @@ public class NotaController {
         long oIdUsuario = Long.parseLong(idUsuario);
 
         return service.traerTodas(oIdUsuario);
+    }
+
+    @PostMapping("/traerTodasPorTags")
+    public List<Nota> traerTodasPorTags(@RequestBody Nota pNota) {
+
+        List<Nota>listNotas=service.traerTodas( pNota.getIdUsuario());
+        List<Nota>listNotasTags = new ArrayList<>();
+        String tagSplited[]= pNota.getTags().trim().split("#");
+        tagSplited= Arrays.copyOfRange(tagSplited, 1, tagSplited.length);
+
+        for (Nota item: listNotas) {
+            for (String tag: tagSplited) {
+
+                if(item.getTags() != null) {
+                    if (item.getTags().contains(tag)){
+                        listNotasTags.add(item);
+                    }
+                }
+            }
+        }
+        return listNotasTags;
+    }
+    @PostMapping("/traerTodasPorDescripcion")
+    public List<Nota> traerTodasPorDescripcion(@RequestBody Nota pNota) {
+
+        List<Nota>listNotas=service.traerTodas( pNota.getIdUsuario());
+        List<Nota>listNotasDescripcion = new ArrayList<>();
+
+        for (Nota item: listNotas) {
+            if(item.getDescripcion().contains(pNota.getDescripcion())){
+            listNotasDescripcion.add(item);}
+        }
+        return listNotasDescripcion;
     }
 
     @GetMapping("/nota/{id}")
