@@ -3,6 +3,7 @@ package com.keeper.googlekeep.servicios;
 import com.keeper.googlekeep.dominios.Nota;
 import com.keeper.googlekeep.dominios.Usuario;
 import com.keeper.googlekeep.repositorios.NotaRepositorio;
+import com.keeper.googlekeep.servicios.interfaces.IServNota;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ServNota {
+public class ServNota implements IServNota {
     @Autowired
     private NotaRepositorio repo;
 
     public List<Nota> traerTodas(long pIdUsuario) {
+        return repo.findAllByIdUsuarioOrderByFechaDesc(pIdUsuario);
+    }
+    public List<Nota> traerTodasPorFecha(long pIdUsuario) {
         return repo.findAllByIdUsuarioOrderByFechaDesc(pIdUsuario);
     }
 

@@ -2,6 +2,7 @@ package com.keeper.googlekeep.servicios;
 
 import com.keeper.googlekeep.dominios.Usuario;
 import com.keeper.googlekeep.repositorios.UsuarioRepositorio;
+import com.keeper.googlekeep.servicios.interfaces.IServUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ServUsuario {
+public class ServUsuario implements IServUsuario {
     @Autowired
     private UsuarioRepositorio repo;
 

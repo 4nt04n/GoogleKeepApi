@@ -1,5 +1,6 @@
 package com.keeper.googlekeep.controller;
 
+import com.keeper.googlekeep.controller.interfaces.IUsuarioController;
 import com.keeper.googlekeep.dominios.Usuario;
 import com.keeper.googlekeep.servicios.ServUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class UsuarioController {
+public class UsuarioController implements IUsuarioController {
     @Autowired
     private ServUsuario service;
 

@@ -1,17 +1,18 @@
 package com.keeper.googlekeep.controller;
 
+import com.keeper.googlekeep.controller.interfaces.INotaController;
 import com.keeper.googlekeep.dominios.Nota;
-import com.keeper.googlekeep.dominios.Usuario;
 import com.keeper.googlekeep.servicios.ServNota;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.time.temporal.Temporal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @RestController
-public class NotaController {
+public class NotaController implements INotaController {
     @Autowired
     private ServNota service;
 
@@ -20,6 +21,11 @@ public class NotaController {
         long oIdUsuario = Long.parseLong(idUsuario);
 
         return service.traerTodas(oIdUsuario);
+    }
+    @GetMapping("/notasFecha/{idUsuario}")
+    public List<Nota> traerTodasPorFecha(@PathVariable String idUsuario) {
+        long oIdUsuario = Long.parseLong(idUsuario);
+        return service.traerTodasPorFecha(oIdUsuario);
     }
 
     @PostMapping("/traerTodasPorTags")
@@ -91,18 +97,40 @@ public class NotaController {
             return "No se encontro la nota";
         }
 
-        if (pNota.getTitulo().equals(editNota.getTitulo()) ) {
+        if (!pNota.getTitulo().equals(editNota.getTitulo()) ) {
             editNota.setTitulo(pNota.getTitulo());
         }
-        if (pNota.getDescripcion().equals(pNota.getDescripcion()) ) {
+        if (!editNota.getDescripcion().equals(pNota.getDescripcion()) ) {
             editNota.setDescripcion(pNota.getDescripcion());
+        }
+        if (!editNota.getTags().equals(pNota.getTags()) ) {
+            editNota.setTags(pNota.getTags());
+        }
+        if (!editNota.getRecordatorio().equals(pNota.getRecordatorio()) ) {
+            editNota.setRecordatorio(pNota.getRecordatorio());
         }
         service.actualizarNota(editNota);
         return "Nota actualizada con exito";
-
-
     }
+    @GetMapping("/notasParaHoy/{idUsuario}")
+    public List<Nota> notasParaHoy(@PathVariable String idUsuario) {
+        long oIdUsuario = Long.parseLong(idUsuario);
+        List<Nota> listNota=service.traerTodas(oIdUsuario);
+        List<Nota> notasHoy=new ArrayList();
 
+        Date fechaHoy= new Date(System.currentTimeMillis());
+        SimpleDateFormat dt =new SimpleDateFormat("yyyy-MM-dd");
+
+        for (Nota item: listNota
+             ) {
+            if(item.getRecordatorio() != null){
+            if(dt.format(item.getRecordatorio()).equals(dt.format(fechaHoy))){
+                notasHoy.add(item);
+            }
+            }
+        }
+        return notasHoy;
+    }
 
 }
 
