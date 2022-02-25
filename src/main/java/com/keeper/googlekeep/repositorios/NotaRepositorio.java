@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface NotaRepositorio extends CrudRepository<Nota, Long> {
     List<Nota> findAllByIdUsuario(long pId);
+
     List<Nota> findAllByIdUsuarioOrderByFechaDesc(long pId);
 }

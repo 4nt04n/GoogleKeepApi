@@ -53,9 +53,12 @@ public class UsuarioController implements IUsuarioController {
 
     @PostMapping(value = "/nuevoUsuario", consumes = "application/json")
     public String nuevoUsuario(@RequestBody Usuario pUsuario) {
+
+
         if (pUsuario.getApellido() != null && pUsuario.getNombre() != null && pUsuario.getEmail() != null && pUsuario.getPassword() != null) {
             //Busca si hay un usuario con este mail
             Usuario enUso = service.traerUnicoXEmail(pUsuario.getEmail());
+            String prueba = Usuario.prueba;
             if (enUso != null) {
                 return "Error, El USUARIO ESTA EN USO";
 

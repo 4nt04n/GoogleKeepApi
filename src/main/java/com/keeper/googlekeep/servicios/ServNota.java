@@ -18,6 +18,7 @@ public class ServNota implements IServNota {
     public List<Nota> traerTodas(long pIdUsuario) {
         return repo.findAllByIdUsuarioOrderByFechaDesc(pIdUsuario);
     }
+
     public List<Nota> traerTodasPorFecha(long pIdUsuario) {
         return repo.findAllByIdUsuarioOrderByFechaDesc(pIdUsuario);
     }

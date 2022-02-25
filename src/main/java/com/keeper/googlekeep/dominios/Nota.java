@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "notas")
-public class Nota implements  Cloneable {
+public class Nota implements Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,18 +22,18 @@ public class Nota implements  Cloneable {
     private Date recordatorio;
 
 
-    public  Nota() {
+    public Nota() {
 
     }
 
-    public Nota(Long id, Long idUsuario, String titulo, String descripcion,Date fecha, String tags,Date recordatorio) {
+    public Nota(Long id, Long idUsuario, String titulo, String descripcion, Date fecha, String tags, Date recordatorio) {
         this.id = id;
         this.idUsuario = idUsuario;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.fecha=fecha;
+        this.fecha = fecha;
         this.tags = tags;
-        this.recordatorio=recordatorio;
+        this.recordatorio = recordatorio;
     }
 
     public Long getId() {
@@ -117,15 +117,15 @@ public class Nota implements  Cloneable {
     @Override
     protected Nota clone() throws CloneNotSupportedException {
 
-            Nota nota = null;
-            try {
-                nota = (Nota) super.clone();
-            } catch (CloneNotSupportedException e) {
-                nota = new Nota(
-                        this.getId(), this.getIdUsuario(),this.getTitulo(),this.getDescripcion(),this.getFecha(),this.getTags(),this.getRecordatorio());
-            }
-
-            return nota;
+        Nota nota = null;
+        try {
+            nota = (Nota) super.clone();
+        } catch (CloneNotSupportedException e) {
+            nota = new Nota(
+                    this.getId(), this.getIdUsuario(), this.getTitulo(), this.getDescripcion(), this.getFecha(), this.getTags(), this.getRecordatorio());
         }
+
+        return nota;
     }
+}
 

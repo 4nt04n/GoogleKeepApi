@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class NotaController implements INotaController {
@@ -22,6 +23,7 @@ public class NotaController implements INotaController {
 
         return service.traerTodas(oIdUsuario);
     }
+
     @GetMapping("/notasFecha/{idUsuario}")
     public List<Nota> traerTodasPorFecha(@PathVariable String idUsuario) {
         long oIdUsuario = Long.parseLong(idUsuario);
@@ -31,16 +33,16 @@ public class NotaController implements INotaController {
     @PostMapping("/traerTodasPorTags")
     public List<Nota> traerTodasPorTags(@RequestBody Nota pNota) {
 
-        List<Nota>listNotas=service.traerTodas( pNota.getIdUsuario());
-        List<Nota>listNotasTags = new ArrayList<>();
-        String tagSplited[]= pNota.getTags().trim().split("#");
-        tagSplited= Arrays.copyOfRange(tagSplited, 1, tagSplited.length);
+        List<Nota> listNotas = service.traerTodas(pNota.getIdUsuario());
+        List<Nota> listNotasTags = new ArrayList<>();
+        String tagSplited[] = pNota.getTags().trim().split("#");
+        tagSplited = Arrays.copyOfRange(tagSplited, 1, tagSplited.length);
 
-        for (Nota item: listNotas) {
-            for (String tag: tagSplited) {
+        for (Nota item : listNotas) {
+            for (String tag : tagSplited) {
 
-                if(item.getTags() != null) {
-                    if (item.getTags().contains(tag)){
+                if (item.getTags() != null) {
+                    if (item.getTags().contains(tag)) {
                         listNotasTags.add(item);
                     }
                 }
@@ -48,15 +50,17 @@ public class NotaController implements INotaController {
         }
         return listNotasTags;
     }
+
     @PostMapping("/traerTodasPorDescripcion")
     public List<Nota> traerTodasPorDescripcion(@RequestBody Nota pNota) {
 
-        List<Nota>listNotas=service.traerTodas( pNota.getIdUsuario());
-        List<Nota>listNotasDescripcion = new ArrayList<>();
+        List<Nota> listNotas = service.traerTodas(pNota.getIdUsuario());
+        List<Nota> listNotasDescripcion = new ArrayList<>();
 
-        for (Nota item: listNotas) {
-            if(item.getDescripcion().contains(pNota.getDescripcion())){
-            listNotasDescripcion.add(item);}
+        for (Nota item : listNotas) {
+            if (item.getDescripcion().contains(pNota.getDescripcion())) {
+                listNotasDescripcion.add(item);
+            }
         }
         return listNotasDescripcion;
     }
@@ -97,37 +101,41 @@ public class NotaController implements INotaController {
             return "No se encontro la nota";
         }
 
-        if (!pNota.getTitulo().equals(editNota.getTitulo()) ) {
+        if (!pNota.getTitulo().equals(editNota.getTitulo())) {
             editNota.setTitulo(pNota.getTitulo());
         }
-        if (!editNota.getDescripcion().equals(pNota.getDescripcion()) ) {
+        if (!editNota.getDescripcion().equals(pNota.getDescripcion())) {
             editNota.setDescripcion(pNota.getDescripcion());
         }
-        if (!editNota.getTags().equals(pNota.getTags()) ) {
+        if (!editNota.getTags().equals(pNota.getTags())) {
             editNota.setTags(pNota.getTags());
         }
-        if (!editNota.getRecordatorio().equals(pNota.getRecordatorio()) ) {
+        if (!editNota.getRecordatorio().equals(pNota.getRecordatorio())) {
             editNota.setRecordatorio(pNota.getRecordatorio());
         }
         service.actualizarNota(editNota);
         return "Nota actualizada con exito";
     }
+
     @GetMapping("/notasParaHoy/{idUsuario}")
     public List<Nota> notasParaHoy(@PathVariable String idUsuario) {
         long oIdUsuario = Long.parseLong(idUsuario);
-        List<Nota> listNota=service.traerTodas(oIdUsuario);
-        List<Nota> notasHoy=new ArrayList();
+        List<Nota> listNota = service.traerTodas(oIdUsuario);
+        List<Nota> notasHoy = new ArrayList();
+        if (!listNota.isEmpty()) {
+            //Uso una operacion lambda para filtrar uno por uno cada nota que tiene un recordatorio null
+            listNota = listNota.stream().filter(p -> p.getRecordatorio() != null).collect(Collectors.toList());
+        }
+        Date fechaHoy = new Date(System.currentTimeMillis());
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date fechaHoy= new Date(System.currentTimeMillis());
-        SimpleDateFormat dt =new SimpleDateFormat("yyyy-MM-dd");
+        for (Nota item : listNota
+        ) {
 
-        for (Nota item: listNota
-             ) {
-            if(item.getRecordatorio() != null){
-            if(dt.format(item.getRecordatorio()).equals(dt.format(fechaHoy))){
+            if (dt.format(item.getRecordatorio()).equals(dt.format(fechaHoy))) {
                 notasHoy.add(item);
             }
-            }
+
         }
         return notasHoy;
     }

@@ -12,6 +12,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public static String prueba="prueba";
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -69,6 +70,7 @@ public class Usuario {
         return Objects.equals(id, usuario.id);
     }
 
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -78,5 +80,18 @@ public class Usuario {
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
                 '}';
+    }
+
+    @Override
+    protected Usuario clone() throws CloneNotSupportedException {
+
+        Usuario usuario = null;
+        try {
+            usuario = (Usuario) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+
+        return usuario;
     }
 }
